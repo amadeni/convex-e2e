@@ -28,6 +28,7 @@ ENV_LOCAL_BACKUP="$PROJECT_ROOT/.env.local.backup"
 BACKEND_PID=""
 
 JWT_ENV_VARS="${E2E_JWT_ENV_VARS:-JWT_PRIVATE_KEY=test-private.pem JWKS=test-jwks.json}"
+CONVEX_INLINE_ENV="${E2E_CONVEX_ENV:-}"
 
 cleanup() {
   if [ -n "$BACKEND_PID" ] && kill -0 "$BACKEND_PID" 2>/dev/null; then
@@ -149,6 +150,11 @@ set_convex_env_vars() {
     local file="${pair#*=}"
     npx convex env set --env-file "$ENV_FILE" -- \
       "$key" "$(cat "$PROJECT_ROOT/$file")"
+  done
+  for pair in $CONVEX_INLINE_ENV; do
+    local key="${pair%%=*}"
+    local value="${pair#*=}"
+    npx convex env set --env-file "$ENV_FILE" -- "$key" "$value"
   done
 }
 

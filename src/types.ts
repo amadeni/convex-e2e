@@ -11,6 +11,7 @@ export type SeedData = Record<string, SeedId>;
 
 export interface TestAuthManager<R extends string = string> {
   getTokenForRole(role: R): Promise<string>;
+  clearCache(): void;
 }
 
 export interface TestContext<R extends string = string> {

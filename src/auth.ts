@@ -60,6 +60,10 @@ export class TestAuthManagerImpl<R extends string = string>
     return client;
   }
 
+  clearCache(): void {
+    this.authResults.clear();
+  }
+
   /**
    * Initialize tokens for all roles upfront.
    */
