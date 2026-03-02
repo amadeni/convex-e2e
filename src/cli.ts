@@ -204,9 +204,7 @@ export async function run<R extends string>(
         const report = buildReport(suiteResults, startTime);
         outputReport(report, options.format, options.format === 'human');
 
-        if (report.summary.failed > 0) {
-          process.exit(1);
-        }
+        process.exit(report.summary.failed > 0 ? 1 : 0);
       } catch (error) {
         process.stderr.write(
           `Test run failed: ${error instanceof Error ? error.message : error}\n`,
