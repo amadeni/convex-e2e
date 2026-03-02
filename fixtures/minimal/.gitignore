@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.local-backend/
+convex_local_storage/
+convex_local_backend.sqlite3
+test-private.pem
+test-jwks.json
+.env.e2e
+.env.local
+.env.local.backup

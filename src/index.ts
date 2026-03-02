@@ -17,14 +17,20 @@ export type {
 } from './types';
 
 export { run } from './cli';
-export { convexRun, convexRunAsync, setProjectRoot } from './convex-run';
+export {
+  convexRun,
+  convexRunAsync,
+  setProjectRoot,
+  parseConvexOutput,
+  FUNCTION_PATH_PATTERN,
+} from './convex-run';
 export {
   createClient,
   createAuthenticatedClient,
   getConvexUrl,
 } from './client';
 export { TestAuthManagerImpl } from './auth';
-export { runTests } from './runner';
+export { runTests, filterSuites, parseError } from './runner';
 export {
   buildReport,
   outputReport,
