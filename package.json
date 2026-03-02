@@ -1,6 +1,6 @@
 {
   "name": "@amadeni/convex-e2e",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Reusable, config-driven end-to-end test runner for Convex + Next.js projects",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
