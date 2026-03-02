@@ -30,6 +30,7 @@
     "prettier:write": "prettier --write .",
     "check-spelling": "cspell '**/*.*' --no-progress",
     "test": "vitest run",
+    "test:e2e": "bash fixtures/minimal/run-e2e.sh",
     "ci": "pnpm run prettier:check && pnpm run lint && pnpm run ts && pnpm run check-spelling && pnpm run test"
   },
   "keywords": [

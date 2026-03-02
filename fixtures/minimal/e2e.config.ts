@@ -13,7 +13,7 @@ export const config = defineConfig<Role>({
   defaultRole: 'admin',
 
   convexFunctions: {
-    createSession: 'testSupport:createTestSession',
+    createSession: 'testAuth:createTestSession',
     seedBase: 'testSupport:seedBase',
     seedAll: 'testSupport:seedAll',
     clearAll: 'testSupport:clearAll',

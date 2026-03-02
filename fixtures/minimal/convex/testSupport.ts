@@ -13,18 +13,6 @@ const SEED_ITEMS = [
   { title: 'Second item', status: 'done', _symId: '@@item2' },
 ];
 
-// ── Auth ────────────────────────────────────────────────────────────────────
-
-export const createTestSession = internalAction({
-  args: { email: v.string() },
-  handler: async (_ctx, args) => {
-    return {
-      userId: `user-${args.email.split('@')[0]}`,
-      token: `test-token-${args.email}`,
-    };
-  },
-});
-
 // ── Seeding ─────────────────────────────────────────────────────────────────
 
 export const seedBase = internalAction({

@@ -216,15 +216,20 @@ async function runTest<R extends string>(
       await suite.beforeEach(ctx);
     }
 
-    await Promise.race([
-      test.run(ctx),
-      new Promise<never>((_, reject) =>
-        setTimeout(
-          () => reject(new Error(`Test timed out after ${timeout}ms`)),
-          timeout,
-        ),
-      ),
-    ]);
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      await Promise.race([
+        test.run(ctx),
+        new Promise<never>((_, reject) => {
+          timer = setTimeout(
+            () => reject(new Error(`Test timed out after ${timeout}ms`)),
+            timeout,
+          );
+        }),
+      ]);
+    } finally {
+      clearTimeout(timer);
+    }
 
     if (suite.afterEach) {
       await suite.afterEach(ctx);
