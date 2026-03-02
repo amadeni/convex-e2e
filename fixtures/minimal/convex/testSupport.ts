@@ -88,7 +88,7 @@ export const deleteTracked = internalMutation({
   },
   handler: async (ctx, args) => {
     let deleted = 0;
-    for (const { id } of args.ids) {
+    for (const { table: _table, id } of args.ids) {
       try {
         await ctx.db.delete(id as never);
         deleted++;
