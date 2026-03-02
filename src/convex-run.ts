@@ -1,6 +1,6 @@
 import { execFileSync } from 'child_process';
 
-const FUNCTION_PATH_PATTERN = /^[a-zA-Z0-9/_-]+:[a-zA-Z0-9_-]+$/;
+export const FUNCTION_PATH_PATTERN = /^[a-zA-Z0-9/_-]+:[a-zA-Z0-9_-]+$/;
 
 let resolvedProjectRoot: string | undefined;
 
@@ -57,7 +57,7 @@ export async function convexRunAsync(
   return convexRun(functionPath, args);
 }
 
-function parseConvexOutput(output: string): unknown {
+export function parseConvexOutput(output: string): unknown {
   try {
     return JSON.parse(output);
   } catch {

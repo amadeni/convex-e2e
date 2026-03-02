@@ -89,7 +89,7 @@ function isBackendEmpty<R extends string>(config: ConvexE2EConfig<R>): boolean {
 /**
  * Filter suites by name prefix.
  */
-function filterSuites<R extends string>(
+export function filterSuites<R extends string>(
   suites: TestSuite<R>[],
   filter?: string,
 ): TestSuite<R>[] {
@@ -318,7 +318,7 @@ async function cleanupTracked<R extends string>(
 /**
  * Parse an error into a structured error object.
  */
-function parseError(error: unknown): TestResult['error'] {
+export function parseError(error: unknown): TestResult['error'] {
   if (error instanceof Error) {
     const result: TestResult['error'] = {
       message: error.message,

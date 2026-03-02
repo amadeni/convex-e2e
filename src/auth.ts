@@ -13,9 +13,9 @@ interface AuthResult {
  * Uses Convex internal actions to create sessions and generate JWTs.
  * Roles and function paths are driven by the project config.
  */
-export class TestAuthManagerImpl<R extends string = string>
-  implements TestAuthManager<R>
-{
+export class TestAuthManagerImpl<
+  R extends string = string,
+> implements TestAuthManager<R> {
   private authResults: Map<R, AuthResult> = new Map();
   private deploymentUrl?: string;
   private roleEmailMap: Record<R, string>;
