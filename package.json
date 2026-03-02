@@ -1,0 +1,50 @@
+{
+  "name": "@amadeni/convex-e2e",
+  "version": "0.1.0",
+  "description": "Reusable, config-driven end-to-end test runner for Convex + Next.js projects",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "convex-e2e": "dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "scripts",
+    "convex-helpers",
+    "config.example.ts",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "convex",
+    "e2e",
+    "testing",
+    "test-runner"
+  ],
+  "author": "Amadeni <nicolai.hallberg@amadeni.ai>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amadeni/convex-e2e.git"
+  },
+  "peerDependencies": {
+    "convex": ">=1.0.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.3",
+    "convex": "^1.32.0",
+    "typescript": "^5.0.0"
+  }
+}
