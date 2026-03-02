@@ -16,7 +16,7 @@ jobs:
 
       - name: Verify tag is on main
         run: |
-          git branch --contains "$GITHUB_SHA" | grep -qE '(^|\s)main$' || \
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main || \
             { echo "::error::Tag must be on the main branch"; exit 1; }
 
       - uses: pnpm/action-setup@v4
