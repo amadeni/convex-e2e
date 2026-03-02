@@ -43,7 +43,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/amadeni/convex-e2e.git"
+    "url": "git+https://github.com/amadeni/convex-e2e.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "peerDependencies": {
     "convex": ">=1.0.0"
