@@ -11,6 +11,13 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify tag is on main
+        run: |
+          git branch --contains "$GITHUB_SHA" | grep -qE '(^|\s)main$' || \
+            { echo "::error::Tag must be on the main branch"; exit 1; }
 
       - uses: pnpm/action-setup@v4
 
