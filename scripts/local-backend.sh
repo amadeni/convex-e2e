@@ -135,7 +135,11 @@ EOF
 
 generate_keys() {
   echo "Generating JWT test keys..."
-  npx tsx "$PROJECT_ROOT/$KEYGEN_SCRIPT"
+  if [[ "$KEYGEN_SCRIPT" = /* ]]; then
+    npx tsx "$KEYGEN_SCRIPT"
+  else
+    npx tsx "$PROJECT_ROOT/$KEYGEN_SCRIPT"
+  fi
 }
 
 deploy_functions() {
