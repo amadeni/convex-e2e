@@ -93,7 +93,7 @@ const itemsSuite: TestSuite<Role> = {
   tests: [
     {
       name: 'seed data exists',
-      run: async (ctx) => {
+      run: async ctx => {
         const items = await ctx.client.query(api.items.list);
         assertDefined(items);
         assertMinLength(items, 1);
@@ -102,7 +102,7 @@ const itemsSuite: TestSuite<Role> = {
     {
       name: 'can create as editor',
       role: 'editor',
-      run: async (ctx) => {
+      run: async ctx => {
         const id = await ctx.client.mutation(api.items.create, {
           title: 'Test',
         });
@@ -175,15 +175,15 @@ appSettings: defineTable({
 
 ### Function reference
 
-| Function | Type | Signature | Purpose |
-|---|---|---|---|
-| `createTestSession` | `internalAction` | `(email: string) => { userId, token }` | Signs a JWT for a test user |
-| `seedBase` | `internalAction` | `() => Record<string, string>` | Seeds minimal data, returns ID map |
-| `seedAll` | `internalAction` | `() => Record<string, string>` | Seeds all fixture data |
-| `clearAll` | `internalAction` | `() => void` | Deletes all test data |
-| `getSeedIdMap` | `internalQuery` | `() => Record<string, string>` | Reads the stored ID map |
-| `deleteTracked` | `internalMutation` | `(ids: {table, id}[]) => void` | Deletes tracked test entities |
-| `listRecords` | `internalQuery` | `(table, limit?) => Document[]` | Lists records (for `inspect` command) |
+| Function            | Type               | Signature                              | Purpose                               |
+| ------------------- | ------------------ | -------------------------------------- | ------------------------------------- |
+| `createTestSession` | `internalAction`   | `(email: string) => { userId, token }` | Signs a JWT for a test user           |
+| `seedBase`          | `internalAction`   | `() => Record<string, string>`         | Seeds minimal data, returns ID map    |
+| `seedAll`           | `internalAction`   | `() => Record<string, string>`         | Seeds all fixture data                |
+| `clearAll`          | `internalAction`   | `() => void`                           | Deletes all test data                 |
+| `getSeedIdMap`      | `internalQuery`    | `() => Record<string, string>`         | Reads the stored ID map               |
+| `deleteTracked`     | `internalMutation` | `(ids: {table, id}[]) => void`         | Deletes tracked test entities         |
+| `listRecords`       | `internalQuery`    | `(table, limit?) => Document[]`        | Lists records (for `inspect` command) |
 
 ### Auth setup (for local backend)
 
@@ -201,7 +201,7 @@ See the [fixtures/minimal/](fixtures/minimal/) directory for a complete working 
 
 If you use an AI coding assistant, run this prompt in your project to have it scaffold the required Convex functions:
 
-````
+```
 I am using the @amadeni/convex-e2e package for end-to-end testing.
 
 Look at my convex/schema.ts to understand my tables. Then look at the reference
@@ -229,7 +229,7 @@ Create the following files in my convex/ directory:
 
 Also create e2e.config.ts, e2e.test.ts, a test suite file, and run-e2e.sh at the
 project root. Follow the Quick Start section of the package README for these.
-````
+```
 
 ---
 
@@ -250,11 +250,11 @@ The [fixtures/minimal/](fixtures/minimal/) directory is a complete, runnable exa
 ```typescript
 interface ConvexE2EConfig<R extends string> {
   projectName: string;
-  projectRoot?: string;        // defaults to process.cwd()
-  roles: Record<R, string>;   // role name -> test user email
+  projectRoot?: string; // defaults to process.cwd()
+  roles: Record<R, string>; // role name -> test user email
   defaultRole: R;
   convexFunctions: {
-    createSession: string;     // "module:functionName" format
+    createSession: string; // "module:functionName" format
     seedBase: string;
     seedAll: string;
     clearAll: string;
@@ -263,7 +263,7 @@ interface ConvexE2EConfig<R extends string> {
     listRecords: string;
   };
   loadSuites: () => TestSuite<R>[];
-  envFiles?: string[];         // defaults to ['.env.local', '.env', '.env.test']
+  envFiles?: string[]; // defaults to ['.env.local', '.env', '.env.test']
 }
 ```
 
@@ -273,15 +273,15 @@ Each test receives a `TestContext` with:
 
 ```typescript
 interface TestContext<R extends string> {
-  client: ConvexHttpClient;           // authenticated for the test's role
-  auth: TestAuthManager<R>;           // token management
-  userId: string;                     // current role's user ID
-  role: R;                            // current role
-  seedData: Record<string, SeedId>;   // symbolic ID map (e.g. seedData['@@user1'])
-  track(table: string, id: string): void;  // register for cleanup
+  client: ConvexHttpClient; // authenticated for the test's role
+  auth: TestAuthManager<R>; // token management
+  userId: string; // current role's user ID
+  role: R; // current role
+  seedData: Record<string, SeedId>; // symbolic ID map (e.g. seedData['@@user1'])
+  track(table: string, id: string): void; // register for cleanup
   asAdmin<T>(fn: (client) => Promise<T>): Promise<T>;
   actAs<T>(role: R, fn: (client) => Promise<T>): Promise<T>;
-  log(msg: string): void;            // verbose-only output
+  log(msg: string): void; // verbose-only output
 }
 ```
 
@@ -289,12 +289,12 @@ interface TestContext<R extends string> {
 
 ```typescript
 import {
-  assert,              // re-export of node:assert/strict
-  assertDefined,       // value is not null/undefined
-  assertMinLength,     // array has at least N items
-  assertThrows,        // async function throws (optional pattern match)
-  assertForbidden,     // function throws a permission error
-  assertNotPermissionFailure,  // function succeeds or fails for non-permission reasons
+  assert, // re-export of node:assert/strict
+  assertDefined, // value is not null/undefined
+  assertMinLength, // array has at least N items
+  assertThrows, // async function throws (optional pattern match)
+  assertForbidden, // function throws a permission error
+  assertNotPermissionFailure, // function succeeds or fails for non-permission reasons
 } from '@amadeni/convex-e2e';
 ```
 
@@ -334,13 +334,13 @@ The included `scripts/local-backend.sh` orchestrates a fully isolated test envir
 
 Controlled via environment variables set in your wrapper script:
 
-| Variable | Required | Description |
-|---|---|---|
-| `E2E_PROJECT_ROOT` | yes | Absolute path to project root |
-| `E2E_TEST_COMMAND` | yes | Command to run tests |
-| `E2E_KEYGEN_SCRIPT` | yes | Path to key generation script (relative to project root) |
-| `E2E_JWT_ENV_VARS` | no | Space-separated `KEY=file` pairs (default: `JWT_PRIVATE_KEY=test-private.pem JWKS=test-jwks.json`) |
-| `CONVEX_LOCAL_PORT` | no | Backend port (default: `3210`) |
+| Variable            | Required | Description                                                                                        |
+| ------------------- | -------- | -------------------------------------------------------------------------------------------------- |
+| `E2E_PROJECT_ROOT`  | yes      | Absolute path to project root                                                                      |
+| `E2E_TEST_COMMAND`  | yes      | Command to run tests                                                                               |
+| `E2E_KEYGEN_SCRIPT` | yes      | Path to key generation script (relative to project root)                                           |
+| `E2E_JWT_ENV_VARS`  | no       | Space-separated `KEY=file` pairs (default: `JWT_PRIVATE_KEY=test-private.pem JWKS=test-jwks.json`) |
+| `CONVEX_LOCAL_PORT` | no       | Backend port (default: `3210`)                                                                     |
 
 ## Convex Helpers
 
