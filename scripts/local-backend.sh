@@ -24,13 +24,21 @@ BACKEND_URL="http://127.0.0.1:$BACKEND_PORT"
 ADMIN_KEY="0135d8598650f8f5cb0f30c34ec2e2bb62793bc28717c8eb6fb577996d50be5f4281b59181095065c5d0f86a2c31ddbe9b597ec62b47ded69782cd"
 ENV_FILE="$PROJECT_ROOT/.env.e2e"
 ENV_LOCAL="$PROJECT_ROOT/.env.local"
-ENV_LOCAL_BACKUP="$PROJECT_ROOT/.env.local.backup"
+ENV_LOCAL_BACKUP=""
+ENV_LOCAL_EXISTED=""
 BACKEND_PID=""
+CLEANUP_DONE=0
 
 JWT_ENV_VARS="${E2E_JWT_ENV_VARS:-JWT_PRIVATE_KEY=test-private.pem JWKS=test-jwks.json}"
 CONVEX_INLINE_ENV="${E2E_CONVEX_ENV:-}"
 
 cleanup() {
+  if [ "$CLEANUP_DONE" -eq 1 ]; then
+    return
+  fi
+  CLEANUP_DONE=1
+  trap - EXIT INT TERM
+
   if [ -n "$BACKEND_PID" ] && kill -0 "$BACKEND_PID" 2>/dev/null; then
     echo "Stopping local Convex backend (pid $BACKEND_PID)..."
     kill "$BACKEND_PID" 2>/dev/null || true
@@ -44,10 +52,7 @@ cleanup() {
     local file="${pair#*=}"
     rm -f "$PROJECT_ROOT/$file"
   done
-  if [ -f "$ENV_LOCAL_BACKUP" ]; then
-    mv "$ENV_LOCAL_BACKUP" "$ENV_LOCAL"
-    echo "Restored .env.local"
-  fi
+  restore_env_local
 }
 trap cleanup EXIT INT TERM
 
@@ -120,8 +125,37 @@ start_backend() {
 
 backup_env_local() {
   if [ -f "$ENV_LOCAL" ]; then
+    ENV_LOCAL_EXISTED=1
+    ENV_LOCAL_BACKUP="$(mktemp "$PROJECT_ROOT/.env.local.backup.XXXXXX")"
     cp "$ENV_LOCAL" "$ENV_LOCAL_BACKUP"
     echo "Backed up .env.local"
+  else
+    ENV_LOCAL_EXISTED=0
+  fi
+}
+
+restore_env_local() {
+  if [ "$ENV_LOCAL_EXISTED" = "1" ]; then
+    if [ -z "$ENV_LOCAL_BACKUP" ] || [ ! -f "$ENV_LOCAL_BACKUP" ]; then
+      echo "Failed to restore .env.local: backup is missing." >&2
+      return 1
+    fi
+
+    cp "$ENV_LOCAL_BACKUP" "$ENV_LOCAL"
+
+    if cmp -s "$ENV_LOCAL_BACKUP" "$ENV_LOCAL"; then
+      rm -f "$ENV_LOCAL_BACKUP"
+      echo "Restored .env.local"
+      return 0
+    fi
+
+    echo "Failed to verify restored .env.local. Backup preserved at $ENV_LOCAL_BACKUP." >&2
+    return 1
+  fi
+
+  if [ "$ENV_LOCAL_EXISTED" = "0" ] && [ -f "$ENV_LOCAL" ]; then
+    rm -f "$ENV_LOCAL"
+    echo "Removed generated .env.local"
   fi
 }
 
