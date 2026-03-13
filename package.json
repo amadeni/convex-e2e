@@ -1,7 +1,7 @@
 {
   "name": "@amadeni/convex-e2e",
   "version": "0.1.4",
-  "description": "Reusable, config-driven end-to-end test runner for Convex + Next.js projects",
+  "description": "Helper to run e2e tests in a convex backend",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
