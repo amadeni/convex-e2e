@@ -208,7 +208,16 @@ Look at my convex/schema.ts to understand my tables. Then look at the reference
 implementation in node_modules/@amadeni/convex-e2e/fixtures/minimal/convex/ to
 understand the required function signatures and patterns.
 
-Create the following files in my convex/ directory:
+Work inside my existing convex/ directory structure. Respect any existing file
+paths, naming, imports, helper modules, and coding style. If one of the files
+below already exists, update it in place instead of replacing it or moving code
+to a different path. Only add new files when they do not already exist.
+
+Ensure the required functions end up at the paths already used by my project. If
+my project uses a different but established location for Convex support code,
+follow that structure rather than forcing a new layout.
+
+Create or update the following files in my convex/ directory:
 
 1. **convex/testAuth.ts** (`"use node"`) - `createTestSession` internalAction
    (signs an RS256 JWT using Node crypto and `JWT_PRIVATE_KEY` env var) and
