@@ -21,7 +21,8 @@ KEYGEN_SCRIPT="${E2E_KEYGEN_SCRIPT:?E2E_KEYGEN_SCRIPT must be set}"
 CACHE_DIR="$PROJECT_ROOT/.local-backend"
 BACKEND_PORT="${CONVEX_LOCAL_PORT:-3210}"
 BACKEND_URL="http://127.0.0.1:$BACKEND_PORT"
-ADMIN_KEY="0135d8598650f8f5cb0f30c34ec2e2bb62793bc28717c8eb6fb577996d50be5f4281b59181095065c5d0f86a2c31ddbe9b597ec62b47ded69782cd"
+ADMIN_KEY=""
+INSTANCE_SECRET="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 ENV_FILE="$PROJECT_ROOT/.env.e2e"
 ENV_LOCAL="$PROJECT_ROOT/.env.local"
 ENV_LOCAL_BACKUP=""
@@ -106,7 +107,11 @@ download_backend() {
 start_backend() {
   local binary="$CACHE_DIR/convex-local-backend"
   echo "Starting local Convex backend on port $BACKEND_PORT..."
-  "$binary" --port "$BACKEND_PORT" > "$CACHE_DIR/backend.log" 2>&1 &
+  "$binary" \
+    --port "$BACKEND_PORT" \
+    --instance-name local-e2e \
+    --instance-secret "$INSTANCE_SECRET" \
+    > "$CACHE_DIR/backend.log" 2>&1 &
   BACKEND_PID=$!
 
   local attempts=30
@@ -121,6 +126,13 @@ start_backend() {
   echo "Backend failed to start within ${attempts}s. Logs:" >&2
   cat "$CACHE_DIR/backend.log" >&2
   exit 1
+}
+
+generate_admin_key() {
+  local binary="$CACHE_DIR/convex-local-backend"
+  ADMIN_KEY="$("$binary" keygen admin-key \
+    --instance-name local-e2e \
+    --instance-secret "$INSTANCE_SECRET")"
 }
 
 backup_env_local() {
@@ -213,6 +225,7 @@ main() {
   platform="$(detect_platform)"
 
   download_backend "$platform"
+  generate_admin_key
   start_backend
   backup_env_local
   write_env_file
